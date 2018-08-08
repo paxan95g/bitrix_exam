@@ -1,7 +1,5 @@
 <?php
 
-use \Bitrix\Main\Loader;
-
 class EventHandlers {
 
     // обработчик события "OnBeforeIBlockElementUpdate"
