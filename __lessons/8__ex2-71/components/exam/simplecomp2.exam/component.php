@@ -24,6 +24,12 @@ $arParams["MANUF_PROPERTY_CODE"] = trim($arParams["MANUF_PROPERTY_CODE"]);
 // Область кэширования
 if($this->startResultCache(false, ($arParams["CACHE_GROUPS"]==="N"? false: $USER->GetGroups()))) {
 
+    if(!Loader::includeModule("iblock")) {
+        $this->abortResultCache();
+        ShowError(GetMessage("IBLOCK_MODULE_NOT_INSTALLED"));
+        return;
+    }
+
     // Получаем список товаров, у которых установлено свойство Фирма - производитель
     $arProduct = [];
     $arFirmsID = [];
