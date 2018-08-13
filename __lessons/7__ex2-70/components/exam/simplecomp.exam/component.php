@@ -20,6 +20,11 @@ if(!isset($arParams["CACHE_TIME"]))
 $arParams["CATALOG_IBLOCK_ID"] = intval($arParams["CATALOG_IBLOCK_ID"]);
 $arParams["NEWS_IBLOCK_ID"] = intval($arParams["NEWS_IBLOCK_ID"]);
 
+// Не используем существующий кэш, если включен Фильтр
+if(isset($_REQUEST['F'])) {
+    $arParams['FILTER_F'] = 'N';
+}
+
 if($this->startResultCache())
 {
     if(!Loader::includeModule("iblock")) {
@@ -34,12 +39,38 @@ if($this->startResultCache())
     $arSelect = ['ID', 'IBLOCK_ID', 'NAME', $arParams["PROPERTY_CODE"]];
     $ob = CIBlockSection::GetList([], $arFilter, false, $arSelect);
     while($res = $ob->Fetch()) {
+
+        // Формируем массив со списков id Новостей, для дальнейшей выборки
+        foreach($res[$arParams["PROPERTY_CODE"]] as $newsID) {
+            if(!isset($arNewsID[$newsID])) {
+                $arNewsID[$newsID] = $newsID;
+            }
+        }
         $arSections[$res['ID']] = $res;
     }
 
     // Получаем эементы инфоблока Продукция и раскидываем по разделам
+    // Дополнительно фильтруем при наличии параметра F
     $count = 0;
-    $arFilter = ['IBLOCK_ID' => $arParams["CATALOG_IBLOCK_ID"], 'ACTIVE' => 'Y'];
+    $arFilter = [
+        'IBLOCK_ID' => $arParams["CATALOG_IBLOCK_ID"],
+        'ACTIVE' => 'Y',
+    ];
+    // Дополнительные параметры фильтрации, если включен Фильтр
+    if(isset($_REQUEST['F'])) {
+        $arFilter[] = [
+            'LOGIC' => 'OR',
+            [
+                '<=PROPERTY_PRICE' => 1700,
+                'PROPERTY_MATERIAL' => 'Дерево, ткань',
+            ],
+            [
+                '<PROPERTY_PRICE' => 1500,
+                'PROPERTY_MATERIAL' => 'Металл, пластик',
+            ],
+        ];
+    }
+
     $arSelect = ['ID', 'IBLOCK_ID', 'NAME', 'IBLOCK_SECTION_ID', 'PROPERTY_PRICE', 'PROPERTY_ARTNUMBER', 'PROPERTY_MATERIAL'];
     $ob = CIBlockElement::GetList([], $arFilter, false, false, $arSelect);
     while($res = $ob->Fetch()) {
@@ -51,7 +82,7 @@ if($this->startResultCache())
 
     // Получаем эементы инфоблока Новости
     $arNews = [];
-    $arFilter = ['IBLOCK_ID' => $arParams["NEWS_IBLOCK_ID"], 'ACTIVE' => 'Y'];
+    $arFilter = ['IBLOCK_ID' => $arParams["NEWS_IBLOCK_ID"], 'ID' => $arNewsID, 'ACTIVE' => 'Y'];
     $arSelect = ['ID', 'IBLOCK_ID', 'NAME', 'DATE_ACTIVE_FROM'];
     $ob = CIBlockElement::GetList([], $arFilter, false, false, $arSelect);
     while($res = $ob->Fetch()) {
@@ -66,9 +97,17 @@ if($this->startResultCache())
             }
         }
     }
-    // Убираем Новости, в которых нет привызянных разделов
-    foreach($arNews as $k =>$news) {
-        if(!isset($news['SECTIONS']) || count($news['SECTIONS']) <=0) {
+
+    // Убираем новости, без товаров
+    foreach ($arNews as $k => $news) {
+        $toDel = true;
+        foreach ($news['SECTIONS'] as $sect) {
+            if(count($sect['ITEMS'])) {
+                $toDel = false;
+                break;
+            }
+        }
+        if($toDel) {
             unset($arNews[$k]);
         }
     }
@@ -81,6 +120,11 @@ if($this->startResultCache())
     $this->setResultCacheKeys(array(
         "COUNT",
     ));
+
+    // Не создаем кэш, если включен Фильтр
+    if(isset($_REQUEST['F'])) {
+        $this->abortResultCache();
+    }
     $this->includeComponentTemplate();
 }
 // Устанавливаем заголовок страницы
