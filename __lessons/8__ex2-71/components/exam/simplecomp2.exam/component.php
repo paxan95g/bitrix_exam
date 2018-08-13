@@ -30,12 +30,15 @@ if($this->startResultCache(false, ($arParams["CACHE_GROUPS"]==="N"? false: $USER
         return;
     }
 
+    // Сортировка элементов инфоблока
+    $arSort = ['NAME' => "ASC", "SORT" => "ASC"];
+
     // Получаем список товаров, у которых установлено свойство Фирма - производитель
     $arProduct = [];
     $arFirmsID = [];
     $arFilter = ['IBLOCK_ID' => $arParams["CATALOG_IBLOCK_ID"], 'ACTIVE' => 'Y', '!PROPERTY_'.$arParams["MANUF_PROPERTY_CODE"] => false, 'CHECK_PERMISSIONS' => 'Y'];
     $arSelect = ['ID', 'IBLOCK_ID', 'NAME', 'PROPERTY_PRICE', 'PROPERTY_MATERIAL', 'PROPERTY_ARTNUMBER', 'PROPERTY_'.$arParams["MANUF_PROPERTY_CODE"], 'DETAIL_PAGE_URL'];
-    $ob = CIBlockElement::GetList([], $arFilter, false, false, $arSelect);
+    $ob = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
     // Устанавливаем шаблон для детальной ссылки
     $ob->SetUrlTemplates($arParams["DETAIL_LINK"]);
     // ОБЯЗАТЕЛЬНО GetNext - если нужно преобразовать ссылки
@@ -52,7 +55,7 @@ if($this->startResultCache(false, ($arParams["CACHE_GROUPS"]==="N"? false: $USER
     $arFirms = [];
     $arFilter = ['IBLOCK_ID' => $arParams["MANUF_IBLOCK_ID"], 'ACTIVE' => 'Y', 'ID' => $arFirmsID, 'CHECK_PERMISSIONS' => 'Y'];
     $arSelect = ['ID', 'IBLOCK_ID', 'NAME'];
-    $ob = CIBlockElement::GetList([], $arFilter, false, false, $arSelect);
+    $ob = CIBlockElement::GetList($arSort, $arFilter, false, false, $arSelect);
     while($res = $ob->Fetch()) {
         foreach($arProduct as $prod) {
             foreach($prod['PROPERTY_'.$arParams["MANUF_PROPERTY_CODE"].'_VALUE'] as $firmID) {
