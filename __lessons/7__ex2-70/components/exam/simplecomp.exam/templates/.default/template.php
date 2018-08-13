@@ -17,7 +17,11 @@ $filterLink = $APPLICATION->GetCurPage().'?F';
 <p>Фильтр: <a href="<?=$filterLink?>"><?=$filterLink?></a></p>
 <ul>
     <?foreach($arResult['NEWS'] as $news):?>
-        <li>
+        <?
+        $this->AddEditAction($news['ID'], $news['EDIT_LINK'], CIBlock::GetArrayByID($news["IBLOCK_ID"], "ELEMENT_EDIT"));
+        $this->AddDeleteAction($news['ID'], $news['DELETE_LINK'], CIBlock::GetArrayByID($news["IBLOCK_ID"], "ELEMENT_DELETE"), array("CONFIRM" => GetMessage('CT_BNL_ELEMENT_DELETE_CONFIRM')));
+        ?>
+        <li id="<?=$this->GetEditAreaId($arItem['ID']);?>">
             <b><?=$news['NAME']?></b> - <?=$news['DATE_ACTIVE_FROM']?>
             (<? $sign = '';
             foreach($news['SECTIONS'] as $sect):?>

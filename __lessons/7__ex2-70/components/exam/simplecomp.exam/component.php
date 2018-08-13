@@ -85,6 +85,18 @@ if($this->startResultCache())
     $arSelect = ['ID', 'IBLOCK_ID', 'NAME', 'DATE_ACTIVE_FROM'];
     $ob = CIBlockElement::GetList([], $arFilter, false, false, $arSelect);
     while($res = $ob->Fetch()) {
+
+        //  Эрмитаж
+        $arButtons = CIBlock::GetPanelButtons(
+            $res["IBLOCK_ID"],
+            $res["ID"],
+            0,
+            array("SECTION_BUTTONS"=>false, "SESSID"=>false)
+        );
+        //pre($arButtons, true);
+        $res["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
+        $res["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
+
         $arNews[$res['ID']] = $res;
     }
 
@@ -128,3 +140,18 @@ if($this->startResultCache())
 }
 // Устанавливаем заголовок страницы
 $APPLICATION->SetTitle(GetMessage('PRODUCT_COUNT') . ' [' . $arResult['COUNT'] . ']');
+
+//  Эрмитаж
+if(
+    $arParams["CATALOG_IBLOCK_ID"] > 0
+    && $USER->IsAuthorized()
+    && !$APPLICATION->GetShowIncludeAreas()
+    && Loader::includeModule("iblock")
+)
+{
+
+    $arButtons = CIBlock::GetPanelButtons($arParams["CATALOG_IBLOCK_ID"], 0, 0, array("SECTION_BUTTONS"=>false));
+
+    pre($arButtons);
+    $this->addIncludeAreaIcons(CIBlock::GetComponentMenu($APPLICATION->GetPublicShowMode(), $arButtons));
+}
