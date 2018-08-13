@@ -11,7 +11,6 @@ if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
 /** @global CMain $APPLICATION */
 
 
-
 use Bitrix\Main\Loader;
 
 if(!isset($arParams["CACHE_TIME"]))
