@@ -22,11 +22,5 @@ $arComponentParameters = array(
         ),
         "CACHE_TIME"  =>  Array("DEFAULT"=>300),
 	),
-    "NEWS_COUNT"  =>  Array(
-        "PARENT" => "BASE",
-        "NAME" => GetMessage("NEWS_COUNT"),
-        "TYPE" => "STRING",
-        "DEFAULT" => "20",
-    ),
 );
 ?>
