@@ -4,39 +4,39 @@ https://github.com/polyanski/bitrix_exam
 git remote add origin git@github.com:polyanski/bitrix_exam.git
 git push -u origin master
 ==============================================================================================
+# Нужно знать наизусть
+- Подключение query в битрикс ( CJSCore::Init(array("jquery2")); )
 
+- JS библиотека Bitrix Framework для отправки AJAX запросов
 
-# Подключение query в битрикс ( CJSCore::Init(array("jquery2")); )
-
-#  JS библиотека Bitrix Framework для отправки AJAX запросов
-
-# $this->__component->SetResultCacheKeys(array(''));
-    ИЛИ
-  $obj_comp = $this->GetComponent();
+- $this->__component->SetResultCacheKeys(array(''));<br>
+    ИЛИ<br>
+  $obj_comp = $this->GetComponent();<br>
   $obj_comp->SetResultCacheKeys(array(''));
 
 
-# $componentPage = CComponentEngine::ParseComponentPath (комплексный. определяем какой файл шаблона подключать при ЧПУ)
+- $componentPage = CComponentEngine::ParseComponentPath (комплексный. определяем какой файл шаблона подключать при ЧПУ)
 
-# \Bitrix\Main\Loader::includeModule('iblock');
+- \Bitrix\Main\Loader::includeModule('iblock');
 
-# IncludeTemplateLangFile(__FILE__); (подключаем ланг файлы)
+- IncludeTemplateLangFile(__FILE__); (подключаем ланг файлы)
 
-# $ob->SetUrlTemplates($arParams["DETAIL_LINK"]); (Устанавливаем шаблон для детальной ссылки)
+- $ob->SetUrlTemplates($arParams["DETAIL_LINK"]); (Устанавливаем шаблон для детальной ссылки)
 
-#  $arResult["NAV_STRING"] = $ob->GetPageNavString("Страницы");  (Формируем постраничную навигацию)
+-  $arResult["NAV_STRING"] = $ob->GetPageNavString("Страницы");  (Формируем постраничную навигацию)
 
-# define("BX_COMP_MANAGED_CACHE", true);   (Включаем тегированый кэш. Для взможности удаления по тегу)
+- define("BX_COMP_MANAGED_CACHE", true);   (Включаем тегированый кэш. Для взможности удаления по тегу)
 
-# global $CACHE_MANAGER;
-# $CACHE_MANAGER->RegisterTag('iblock_id_3');
+- global $CACHE_MANAGER;
 
-# date($DB->DateFormatToPHP(CSite::GetDateFormat("FULL")), time());   (Дата в формате текущего сайта)
+- $CACHE_MANAGER->RegisterTag('iblock_id_3');
 
-# COption::SetOptionString  /  COption::GetOptionString   (Установка/получание параметра модуля)
+- date($DB->DateFormatToPHP(CSite::GetDateFormat("FULL")), time());   (Дата в формате текущего сайта)
 
-# Событие BeforeIndex   (Перед индексацией элементов инфоблока)
+- COption::SetOptionString  /  COption::GetOptionString   (Установка/получание параметра модуля)
 
-# json_encode()    (php)
+- Событие BeforeIndex   (Перед индексацией элементов инфоблока)
 
-# LocalRedirect     (битрикс)
+- json_encode()    (php)
+
+- LocalRedirect     (битрикс)
