@@ -1,9 +1,7 @@
-GIT:
-https://github.com/polyanski/bitrix_exam
-
-git remote add origin git@github.com:polyanski/bitrix_exam.git
+git remote add origin git@github.com:polyanski/bitrix_exam.git<br>
 git push -u origin master
-==============================================================================================
+
+=========================================================================
 # Нужно знать наизусть
 - Подключение query в битрикс ( CJSCore::Init(array("jquery2")); )
 
