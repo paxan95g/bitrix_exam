@@ -24,10 +24,9 @@ git push -u origin master
 -  $arResult["NAV_STRING"] = $ob->GetPageNavString("Страницы");  (Формируем постраничную навигацию)
 
 - define("BX_COMP_MANAGED_CACHE", true);   (Включаем тегированый кэш. Для взможности удаления по тегу)
-
 - global $CACHE_MANAGER;
-
 - $CACHE_MANAGER->RegisterTag('iblock_id_3');
+- CIBlock::clearIblockTagCache( 7 );
 
 - date($DB->DateFormatToPHP(CSite::GetDateFormat("FULL")), time());   (Дата в формате текущего сайта)
 
@@ -38,3 +37,5 @@ git push -u origin master
 - json_encode()    (php)
 
 - LocalRedirect     (битрикс)
+
+- Пункты административного меню можно добавлять с помощью события OnBuildGlobalMenu.
